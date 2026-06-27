@@ -9,11 +9,16 @@ class ApiSettings(BaseModel):
     title: str = "JobPulse AI"
     description: str = ""
 
+class PreloadSettings(BaseModel):
+    embeddings: bool = False
+    faiss: bool = True
+
 class ApplicationSettings(BaseModel):
     version: str
     environment: str
     debug: bool = False
     api: ApiSettings
+    preload: PreloadSettings = Field(default_factory=PreloadSettings)
 
 class FeatureFlag(BaseModel):
     enabled: bool = False

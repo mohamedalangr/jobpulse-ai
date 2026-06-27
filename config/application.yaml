@@ -6,3 +6,6 @@ api:
   port: 8000
   title: "JobPulse AI"
   description: "Career Intelligence API Backend"
+preload:
+  embeddings: false
+  faiss: true
