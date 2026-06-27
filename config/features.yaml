@@ -1,0 +1,17 @@
+features:
+  semantic_search:
+    enabled: true
+    rollout: 100
+    min_version: "0.1.0"
+    
+  career_intelligence:
+    enabled: true
+    rollout: 100
+    
+  market_discovery:
+    enabled: true
+    rollout: 100
+    
+  learning_engine:
+    enabled: true
+    rollout: 100

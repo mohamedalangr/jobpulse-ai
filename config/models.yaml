@@ -1,0 +1,27 @@
+models:
+  default_embedding:
+    id: "all-MiniLM-L6-v2"
+    name: "all-MiniLM-L6-v2"
+    version: "1.0"
+    category: "embedding"
+    provider: "sentence-transformers"
+    dimension: 384
+    framework: "pytorch"
+    checksum: "placeholder"
+    
+  default_clusterer:
+    id: "hdbscan_default"
+    name: "hdbscan"
+    version: "0.8.33"
+    category: "clusterer"
+    provider: "hdbscan"
+    framework: "scikit-learn"
+    
+  default_reducer:
+    id: "umap_default"
+    name: "umap"
+    version: "0.5.5"
+    category: "reducer"
+    provider: "umap-learn"
+    dimension: 2
+    framework: "numba"
