@@ -8,3 +8,4 @@ pytest
 black
 ruff
 pre-commit
+pyarrow
