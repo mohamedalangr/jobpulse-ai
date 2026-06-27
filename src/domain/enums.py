@@ -3,6 +3,11 @@ Domain enumerations.
 """
 from enum import Enum
 
+class ScraperStatus(str, Enum):
+    SUCCESS = "success"
+    FAILED = "failed"
+    PARTIAL = "partial"
+
 class EmploymentType(str, Enum):
     FULL_TIME = "FULL_TIME"
     PART_TIME = "PART_TIME"

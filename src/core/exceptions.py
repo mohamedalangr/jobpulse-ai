@@ -10,6 +10,10 @@ class DatabaseConnectionError(JobPulseError):
     """Exception raised when the database is unreachable."""
     pass
 
+class DuplicateScraperError(JobPulseError):
+    """Exception raised when registering a scraper that already exists."""
+    pass
+
 class ConfigurationError(Exception):
     """Raised when there is a configuration error."""
     pass
