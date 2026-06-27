@@ -2,6 +2,7 @@ import logging
 from typing import Any, List, Union
 from datetime import datetime, timezone
 from src.domain.entities.job_posting import JobPosting
+from src.domain.entities.metadata import RecordMetadata
 from src.domain.enums import JobSource
 from src.ingestion.parsers.base import BaseParser
 
@@ -34,15 +35,21 @@ class RemoteOKParser(BaseParser):
             try:
                 # Basic Mapping
                 now = datetime.now(timezone.utc)
+                metadata = RecordMetadata(
+                    source=JobSource.REMOTEOK.value,
+                    pipeline_version="0.2.0",
+                    first_seen_at=now,
+                    last_seen_at=now
+                )
+                
                 job = JobPosting(
                     id=str(item.get("id")),
                     title=item.get("position"),
                     company=item.get("company"),
                     description=item.get("description", ""),
-                    source=JobSource.REMOTEOK.value,
                     url=item.get("url", ""),
-                    scraped_at=now,
                     raw_data=item,
+                    metadata=metadata,
                     location=item.get("location"),
                     salary_min=float(item["salary_min"]) if item.get("salary_min") else None,
                     salary_max=float(item["salary_max"]) if item.get("salary_max") else None,

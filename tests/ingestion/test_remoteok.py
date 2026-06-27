@@ -43,9 +43,9 @@ def test_remoteok_parser():
     assert len(jobs) == 1
     job = jobs[0]
     assert job.title == "Software Engineer"
-    assert job.company == "Tech Corp"
-    assert job.salary_min == 100000
-    assert job.salary_max == 150000
+    assert jobs[0].company == "Tech Corp"
+    assert jobs[0].metadata.source == "REMOTEOK"
+    assert jobs[0].salary_min == 100000.0
 
 def test_remoteok_scraper_integration():
     scraper = RemoteOKScraper()

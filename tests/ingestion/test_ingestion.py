@@ -25,4 +25,4 @@ def test_ingestion_framework():
     assert len(jobs) == 8
     for job in jobs:
         assert isinstance(job, JobPosting)
-        assert job.source == "MOCK"
+        assert job.metadata.source == "MOCK"

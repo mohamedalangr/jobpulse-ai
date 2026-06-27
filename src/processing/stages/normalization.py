@@ -4,7 +4,7 @@ from src.processing.stages.base_stage import PipelineStage
 
 class NormalizationStage(PipelineStage):
     """Normalizes categorical fields to match standard domain taxonomies."""
-    def process(self, jobs: List[JobPosting]) -> List[JobPosting]:
+    def _process(self, jobs: List[JobPosting]) -> List[JobPosting]:
         for job in jobs:
             # Normalize remote location explicitly
             if job.location and job.location.lower() in ["worldwide", "anywhere", "remote"]:

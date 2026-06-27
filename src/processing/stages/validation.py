@@ -7,7 +7,7 @@ logger = logging.getLogger("jobpulse_ai.processing.validation")
 
 class ValidationStage(PipelineStage):
     """Drops invalid jobs that lack crucial domain identity."""
-    def process(self, jobs: List[JobPosting]) -> List[JobPosting]:
+    def _process(self, jobs: List[JobPosting]) -> List[JobPosting]:
         valid_jobs = []
         for job in jobs:
             if not job.id:

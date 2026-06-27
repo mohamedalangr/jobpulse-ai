@@ -1,4 +1,6 @@
+from datetime import datetime
 from src.domain.entities.job_posting import JobPosting
+from src.domain.entities.metadata import RecordMetadata
 from src.processing.pipeline import ProcessingPipeline
 from src.processing.stages.validation import ValidationStage
 from src.processing.stages.cleaning import CleaningStage
@@ -19,27 +21,31 @@ def test_full_pipeline():
         DeduplicationStage(detector)
     ])
     
+    now = datetime.now()
+    
     jobs = [
         # Valid job
         JobPosting(
             id="1", title="Software Engineer  ", company="  Tech Corp",
-            description="<p>Great job</p>", source="MOCK", url="https://mock.com",
-            scraped_at=None, raw_data={}, location="Anywhere", employment_type="full time"
+            description="<p>Great job</p>", url="https://mock.com",
+            raw_data={}, metadata=RecordMetadata(source="MOCK", pipeline_version="test", first_seen_at=now, last_seen_at=now),
+            location="Anywhere", employment_type="full time"
         ),
         # Invalid job (missing title)
         JobPosting(
             id="2", title="", company="Tech Corp", description="",
-            source="MOCK", url="https://mock.com", scraped_at=None, raw_data={}
+            url="https://mock.com", raw_data={},
+            metadata=RecordMetadata(source="MOCK", pipeline_version="test", first_seen_at=now, last_seen_at=now)
         ),
-        # Duplicate of job 1 (same title and company and url)
+        # Duplicate of job 1
         JobPosting(
             id="3", title="Software Engineer", company="Tech Corp",
-            description="Another desc", source="OTHER", url="https://mock.com",
-            scraped_at=None, raw_data={}
+            description="Another desc", url="https://mock.com",
+            raw_data={}, metadata=RecordMetadata(source="OTHER", pipeline_version="test", first_seen_at=now, last_seen_at=now)
         )
     ]
     
-    processed = pipeline.process(jobs)
+    processed, report = pipeline.process(jobs)
     
     assert len(processed) == 1
     job = processed[0]
@@ -54,4 +60,4 @@ def test_full_pipeline():
     assert job.employment_type == "FULL_TIME"
     
     # Check fingerprinting
-    assert job.fingerprint is not None
+    assert job.metadata.fingerprint is not None

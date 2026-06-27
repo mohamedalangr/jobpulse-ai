@@ -52,8 +52,32 @@ def main():
         DeduplicationStage(detector)
     ])
     
-    processed_jobs = pipeline.process(jobs)
-    print(f"\nFinal Processed Jobs: {len(processed_jobs)}\n")
+    processed_jobs, report = pipeline.process(jobs)
+    print(f"\nFinal Processed Jobs: {len(processed_jobs)}")
+    print(f"Total Pipeline Duration: {report.total_duration:.2f}s\n")
+    
+    try:
+        from src.database.connection import engine
+        from sqlalchemy.orm import Session
+        from src.database.repositories.job_repository import JobRepository
+        
+        with Session(engine) as session:
+            repo = JobRepository(session)
+            with repo.transaction():
+                db_report = repo.persist(processed_jobs)
+                
+        print("=" * 41)
+        print("Persistence Report")
+        print("=" * 41)
+        print(f"Inserted: {db_report.inserted}")
+        print(f"Updated: {db_report.updated}")
+        print(f"Unchanged: {db_report.unchanged}")
+        print(f"Failed: {db_report.failed}")
+        print(f"Duration: {db_report.duration:.2f} s\n")
+
+    except Exception as e:
+        print("\n[WARNING] Could not connect to PostgreSQL database. Persistence skipped.")
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
     main()

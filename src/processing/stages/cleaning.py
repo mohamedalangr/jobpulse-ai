@@ -5,7 +5,7 @@ from src.processing.stages.base_stage import PipelineStage
 
 class CleaningStage(PipelineStage):
     """Cleans up formatting and removes HTML tags."""
-    def process(self, jobs: List[JobPosting]) -> List[JobPosting]:
+    def _process(self, jobs: List[JobPosting]) -> List[JobPosting]:
         for job in jobs:
             if job.title:
                 job.title = job.title.strip()

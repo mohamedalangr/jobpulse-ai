@@ -11,15 +11,15 @@ class DeduplicationStage(PipelineStage):
     def __init__(self, detector: DuplicateDetector):
         self.detector = detector
 
-    def process(self, jobs: List[JobPosting]) -> List[JobPosting]:
+    def _process(self, jobs: List[JobPosting]) -> List[JobPosting]:
         unique_jobs = []
         for job in jobs:
-            if not job.fingerprint:
+            if not job.metadata.fingerprint:
                 # Cannot deduplicate without a fingerprint, so we keep it
                 unique_jobs.append(job)
                 continue
                 
-            if self.detector.is_duplicate(job.fingerprint):
+            if self.detector.is_duplicate(job.metadata.fingerprint):
                 logger.debug(f"Dropped duplicate job: {job.title} at {job.company}")
             else:
                 unique_jobs.append(job)
