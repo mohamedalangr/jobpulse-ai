@@ -1,15 +1,120 @@
-version: "3.8"
+version: '3.8'
+
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
-  db:
-    image: postgres:15
+  postgres:
+    image: postgres:15-alpine
     environment:
-      POSTGRES_USER: username
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: jobpulse_ai
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: ${POSTGRES_USER:-jobpulse}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-jobpulse_password}
+      POSTGRES_DB: ${POSTGRES_DB:-jobpulse}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-jobpulse} -d ${POSTGRES_DB:-jobpulse}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - jobpulse
+    logging: *default-logging
+
+  migrate:
+    build:
+      context: .
+      dockerfile: ops/docker/migrate.Dockerfile
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://jobpulse:jobpulse_password@postgres:5432/jobpulse}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - jobpulse
+    logging: *default-logging
+
+  api:
+    build:
+      context: .
+      dockerfile: ops/docker/api.Dockerfile
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://jobpulse:jobpulse_password@postgres:5432/jobpulse}
+      API_KEY: ${API_KEY}
+      API_ENV: ${API_ENV:-development}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      PRELOAD_EMBEDDINGS: ${PRELOAD_EMBEDDINGS:-true}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-all-MiniLM-L6-v2}
+    volumes:
+      - hf_cache:/home/appuser/.cache/huggingface
+      - artifacts:/app/artifacts
+      - embeddings:/app/data/embeddings
+      - datasets:/app/data/raw
+      - exports:/app/data/exports
+      - logs:/app/logs
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health/startup')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - jobpulse
+    logging: *default-logging
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: ops/docker/dashboard.Dockerfile
+    environment:
+      API_URL: ${API_URL:-http://api:8000/api/v1}
+      API_KEY: ${API_KEY}
+      REQUEST_TIMEOUT: ${REQUEST_TIMEOUT:-30}
+    volumes:
+      - artifacts:/app/artifacts:ro
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - jobpulse
+    logging: *default-logging
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./ops/docker/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      api:
+        condition: service_healthy
+      dashboard:
+        condition: service_healthy
+    networks:
+      - jobpulse
+    logging: *default-logging
+
+networks:
+  jobpulse:
+    name: jobpulse-network
+    driver: bridge
 
 volumes:
   postgres_data:
+  hf_cache:
+  artifacts:
+  embeddings:
+  datasets:
+  exports:
+  logs:

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+    restart: always
+
+  api:
+    deploy:
+      resources:
+        limits:
+          # Limit heavily depends on whether PRELOAD_EMBEDDINGS is enabled
+          memory: 2G
+          cpus: '2.0'
+    read_only: false # Read-only is preferred but HuggingFace Cache and runtime logs need exceptions if not volume mapped thoroughly
+    restart: always
+
+  dashboard:
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    restart: always
+
+  nginx:
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+    restart: always

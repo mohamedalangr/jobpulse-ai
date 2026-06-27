@@ -1,47 +1,44 @@
 # JobPulse AI
 
-JobPulse AI is an extensible intelligence platform capable of transforming raw job postings into structured, searchable, and analyzable knowledge. 
+An advanced system for analyzing career opportunities, evaluating candidate market fit, and building intelligent learning roadmaps using semantic search and feature engineering.
 
-Rather than a simple web scraper, this project serves as a comprehensive **AI Systems Engineering Case Study**, demonstrating strict architectural boundaries, reproducible NLP pipelines, and deterministically versioned datasets.
+## 🚀 Quick Start (Docker Deployment)
 
-👉 **[Read the Full Engineering Case Study here](docs/architecture/case_study.md)**
+JobPulse AI uses Docker Compose to run an entire production-grade stack locally with a single command. The stack includes a FastAPI backend, a Streamlit dashboard, a PostgreSQL database, and an Nginx reverse proxy.
 
----
+### 1. Prerequisites
+- Docker and Docker Compose installed
+- Git
 
-## 🛠️ System Architecture
+### 2. Startup
 
-JobPulse AI utilizes a strict clean architecture separating Ingestion, Processing, Analytics, and Semantic Intelligence. 
+Clone the repository and run the bootstrap sequence:
 
-```mermaid
-flowchart TD
-    A[Job Sources] --> B[Ingestion Layer]
-    B --> C[Processing Pipeline]
-    C --> D[(Persistence Layer)]
-    C --> E[Intelligence Layer]
-    E --> F[Semantic Search • UMAP • Embedding Cache]
+```bash
+git clone https://github.com/jobpulse-ai/jobpulse-ai.git
+cd jobpulse-ai
+
+# Copy environment variables
+cp .env.example .env
+
+# Spin up the infrastructure
+docker compose up --build
 ```
+*(Alternatively, simply run `bash ops/scripts/bootstrap.sh`)*
 
-## 🚀 Quick Start
+### 3. Accessing the Platform
 
-1. **Install dependencies:**
-   ```bash
-   uv venv
-   uv pip install -r pyproject.toml
-   ```
-2. **Run semantic embeddings and visualization:**
-   ```bash
-   python demo_embedding_analytics.py
-   ```
-   *(Generates PCA and UMAP artifacts into `artifacts/visualization/`)*
+Once the containers are running and the `migrate` worker finishes initializing the database, Nginx acts as the primary gateway:
 
-## 🧠 Semantic Intelligence
-JobPulse AI converts scraped job descriptions into local dense 384-dimensional vectors. Utilizing dimensionality reduction (UMAP), we can instantly cluster and visualize the modern job market without relying on external cloud APIs.
+- **Dashboard (Streamlit):** [http://localhost](http://localhost)
+- **API Swagger Docs:** [http://localhost/api/docs](http://localhost/api/docs)
+- **API Health Check:** [http://localhost/api/v1/health/live](http://localhost/api/v1/health/live)
 
-![UMAP Projection](artifacts/visualization/umap/projection.png)
-
-## 📊 Analytics
-JobPulse AI provides typed analytics over the data, tracking skills, remote work, and normalized salaries into flattened `.csv` and `.parquet` formats for seamless integration with downstream ML workflows.
+> **Note**: On the first execution, the API container will download the HuggingFace embedding models. This takes a few minutes but will be securely cached in a persistent volume for all future restarts.
 
 ---
-**License**: MIT  
-**Read More**: [Building JobPulse AI (Case Study)](docs/architecture/case_study.md)
+
+## Architecture Details
+For a deep dive into the underlying systems, see:
+- [System Components](docs/architecture/components.md)
+- [Deployment Topology](docs/architecture/deployment.md)

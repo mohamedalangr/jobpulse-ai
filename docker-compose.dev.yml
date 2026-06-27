@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  api:
+    volumes:
+      # Mount local source code directly into container for hot reloading
+      - ./src:/app/src
+      - ./config:/app/config
+    command: ["uvicorn", "src.api.app:create_app", "--host", "0.0.0.0", "--port", "8000", "--factory", "--reload"]
+
+  dashboard:
+    volumes:
+      # Mount local source code directly for Streamlit hot reloading
+      - ./src/dashboard:/app/src/dashboard
+      - ./config/dashboard.yaml:/app/config/dashboard.yaml
