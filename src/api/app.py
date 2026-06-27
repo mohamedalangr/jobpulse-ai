@@ -4,6 +4,7 @@ from src.api.exception_handlers import register_exception_handlers
 from src.api.middleware.request_context import RequestContextMiddleware
 from src.api.middleware.timing import TimingMiddleware
 from src.api.middleware.logging import StructuredLoggingMiddleware
+from src.api.middleware.security import SecurityHeadersMiddleware
 from src.api.v1.routers import health, search
 
 def create_app() -> FastAPI:
@@ -20,6 +21,7 @@ def create_app() -> FastAPI:
     # Register Middleware (Note: FastAPI executes them bottom-up for outward flow)
     app.add_middleware(StructuredLoggingMiddleware)
     app.add_middleware(TimingMiddleware)
+    app.add_middleware(SecurityHeadersMiddleware)
     app.add_middleware(RequestContextMiddleware)
     
     # Register Exception Handlers

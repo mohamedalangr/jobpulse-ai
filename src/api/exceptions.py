@@ -20,3 +20,11 @@ class ConfigurationError(JobPulseError):
 class IntelligenceError(JobPulseError):
     def __init__(self, message: str, details: dict = None):
         super().__init__("INTELLIGENCE_ERROR", message, details)
+
+class AuthenticationError(JobPulseError):
+    def __init__(self, message: str, details: dict = None):
+        super().__init__("AUTHENTICATION_ERROR", message, details)
+
+class AuthorizationError(JobPulseError):
+    def __init__(self, message: str, details: dict = None):
+        super().__init__("AUTHORIZATION_ERROR", message, details)

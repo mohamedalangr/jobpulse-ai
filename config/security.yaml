@@ -1,0 +1,3 @@
+# To generate a new hash: python -c "import hashlib; print(hashlib.sha256(b'your-secret').hexdigest())"
+# The default hash corresponds to the raw key: 'dev-secret-key'
+api_key_hash: "0537dfd229ccd644e29c82f0c27a1b3b075a1589fa75a186ed40abc25bfcd248"

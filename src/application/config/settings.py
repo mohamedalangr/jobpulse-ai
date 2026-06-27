@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Dict, Optional
 import yaml
 import os
@@ -38,6 +38,9 @@ class ModelDescriptorConfig(BaseModel):
     framework: str
     checksum: Optional[str] = None
 
+class SecuritySettings(BaseModel):
+    api_key_hash: Optional[str] = None
+
 class ModelSettings(BaseModel):
     models: Dict[str, ModelDescriptorConfig]
 
@@ -48,6 +51,7 @@ class ConfigManager:
         self.app_settings = self._load(ApplicationSettings, "application.yaml")
         self.feature_settings = self._load(FeatureSettings, "features.yaml")
         self.model_settings = self._load(ModelSettings, "models.yaml")
+        self.security_settings = self._load(SecuritySettings, "security.yaml")
         
     def _load(self, model_class, filename: str):
         path = os.path.join(self.config_dir, filename)
