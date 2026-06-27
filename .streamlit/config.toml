@@ -1,0 +1,4 @@
+[theme]
+primaryColor = "#0068c9"
+font = "sans serif"
+# Intentionally omitting base, backgroundColor, and textColor to allow OS-native light/dark modes.
