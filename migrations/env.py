@@ -9,6 +9,10 @@ from alembic import context
 # access to the values within the .ini file in use.
 config = context.config
 
+# Dynamically set the database URL from settings
+from src.core.config import settings
+config.set_main_option("sqlalchemy.url", settings.database_url)
+
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
@@ -16,9 +20,10 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-target_metadata = None
+from src.database.base import Base
+import src.database.models.job
+
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
