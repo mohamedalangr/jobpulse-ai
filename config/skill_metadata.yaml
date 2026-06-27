@@ -1,0 +1,83 @@
+docker:
+  estimated_hours: 20
+  difficulty: intermediate
+  category: devops
+  demand_weight: 0.85
+
+kubernetes:
+  estimated_hours: 45
+  difficulty: advanced
+  category: devops
+  demand_weight: 0.90
+
+terraform:
+  estimated_hours: 25
+  difficulty: intermediate
+  category: devops
+  demand_weight: 0.80
+
+aws:
+  estimated_hours: 40
+  difficulty: intermediate
+  category: cloud
+  demand_weight: 0.95
+
+fastapi:
+  estimated_hours: 15
+  difficulty: beginner
+  category: backend
+  demand_weight: 0.70
+
+sql:
+  estimated_hours: 10
+  difficulty: beginner
+  category: database
+  demand_weight: 0.90
+
+postgresql:
+  estimated_hours: 15
+  difficulty: intermediate
+  category: database
+  demand_weight: 0.85
+
+python:
+  estimated_hours: 30
+  difficulty: beginner
+  category: language
+  demand_weight: 0.95
+
+django:
+  estimated_hours: 25
+  difficulty: intermediate
+  category: backend
+  demand_weight: 0.65
+
+pandas:
+  estimated_hours: 15
+  difficulty: intermediate
+  category: data
+  demand_weight: 0.75
+
+spark:
+  estimated_hours: 35
+  difficulty: advanced
+  category: data
+  demand_weight: 0.80
+
+react:
+  estimated_hours: 30
+  difficulty: intermediate
+  category: frontend
+  demand_weight: 0.90
+
+javascript:
+  estimated_hours: 25
+  difficulty: beginner
+  category: language
+  demand_weight: 0.90
+
+typescript:
+  estimated_hours: 20
+  difficulty: intermediate
+  category: language
+  demand_weight: 0.85

@@ -1,0 +1,82 @@
+docker:
+  prerequisites:
+    - rest
+    - linux
+  unlocks:
+    - kubernetes
+    - aws
+
+kubernetes:
+  prerequisites:
+    - docker
+  unlocks:
+    - terraform
+    - helm
+
+terraform:
+  prerequisites:
+    - aws
+    - kubernetes
+  unlocks: []
+
+aws:
+  prerequisites: []
+  unlocks:
+    - terraform
+
+fastapi:
+  prerequisites:
+    - python
+    - rest
+  unlocks: []
+
+sql:
+  prerequisites: []
+  unlocks:
+    - postgresql
+
+postgresql:
+  prerequisites:
+    - sql
+  unlocks: []
+
+python:
+  prerequisites: []
+  unlocks:
+    - fastapi
+    - django
+    - pandas
+
+django:
+  prerequisites:
+    - python
+  unlocks: []
+
+pandas:
+  prerequisites:
+    - python
+  unlocks:
+    - spark
+
+spark:
+  prerequisites:
+    - python
+    - sql
+    - pandas
+  unlocks: []
+
+react:
+  prerequisites:
+    - javascript
+  unlocks: []
+
+javascript:
+  prerequisites: []
+  unlocks:
+    - react
+    - typescript
+
+typescript:
+  prerequisites:
+    - javascript
+  unlocks: []
