@@ -1,0 +1,39 @@
+name: Docker & Reproducibility
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build_and_smoke_test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Environment Setup
+      run: cp .env.example .env
+      
+    - name: Validate Compose Config
+      run: docker compose config
+      
+    - name: Build Docker Images
+      run: docker compose build
+      
+    - name: Smoke Test (Reproducibility)
+      run: |
+        # Start detached
+        docker compose up -d
+        
+        # Wait for services to stabilize
+        sleep 30
+        
+        # Check statuses
+        docker compose ps
+        
+        # We can also hit the API health check
+        curl -f http://localhost:8000/api/v1/health/live || exit 1
+        
+        # Teardown
+        docker compose down -v

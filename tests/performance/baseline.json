@@ -1,0 +1,6 @@
+{
+  "semantic_search_ms": 10,
+  "career_analysis_ms": 50,
+  "learning_ms": 100,
+  "pipeline_100_jobs_sec": 2
+}
