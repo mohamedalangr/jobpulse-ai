@@ -1,10 +1,11 @@
 import time
 from abc import ABC, abstractmethod
-from typing import Any, List, Dict, Union
+from typing import Any, List, Union
 from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from src.domain.entities.job_posting import JobPosting
 from src.domain.enums import ScraperStatus
+from src.ingestion.parsers.base import BaseParser
 import logging
 
 logger = logging.getLogger("jobpulse_ai.ingestion")
@@ -20,12 +21,8 @@ class ScraperResult:
     error: str | None = None
     warnings: List[str] = field(default_factory=list)
     jobs: List[JobPosting] = field(default_factory=list)
-
-class BaseParser(ABC):
-    """Converts raw fetched content into domain objects."""
-    @abstractmethod
-    def parse(self, raw_data: Union[bytes, dict, str, List[Any]]) -> List[JobPosting]:
-        pass
+    raw_records: int = 0
+    failed_records: int = 0
 
 class BaseScraper(ABC):
     """Abstract base class that defines the contract for every scraper."""
@@ -86,6 +83,11 @@ class BaseScraper(ABC):
             finished_at = datetime.now(timezone.utc)
             duration = time.perf_counter() - start_time
             logger.info(f"[INGESTION] Source={self.source_name} Jobs={len(jobs)} Duration={duration:.2f}s Status=Success")
+            
+            raw_count = len(raw_data) if isinstance(raw_data, list) else 0
+            # Rough estimate: RemoteOK has 1 disclaimer record, so failed = raw - jobs - 1. But clamp to 0.
+            failed_count = max(0, raw_count - len(jobs) - (1 if self.source_name == "REMOTEOK" else 0))
+            
             return ScraperResult(
                 source=self.source_name,
                 jobs_collected=len(jobs),
@@ -93,7 +95,9 @@ class BaseScraper(ABC):
                 status=ScraperStatus.SUCCESS,
                 started_at=started_at,
                 finished_at=finished_at,
-                jobs=jobs
+                jobs=jobs,
+                raw_records=raw_count - (1 if self.source_name == "REMOTEOK" else 0),
+                failed_records=failed_count
             )
         except Exception as e:
             finished_at = datetime.now(timezone.utc)
