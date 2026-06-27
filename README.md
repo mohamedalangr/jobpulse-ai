@@ -22,23 +22,18 @@ cd jobpulse-ai
 cp .env.example .env
 
 # Spin up the infrastructure
-docker compose up --build
+# 3. Launch
+docker compose up --build -d
 ```
-*(Alternatively, simply run `bash ops/scripts/bootstrap.sh`)*
 
-### 3. Accessing the Platform
+Once running:
+- **Dashboard**: `http://localhost:8501`
+- **API Docs**: `http://localhost:8000/api/v1/docs`
 
-Once the containers are running and the `migrate` worker finishes initializing the database, Nginx acts as the primary gateway:
+> Note: To populate the database with initial market data, run:
+> `docker compose exec api python ops/scripts/seed_database.py`
 
-- **Dashboard (Streamlit):** [http://localhost](http://localhost)
-- **API Swagger Docs:** [http://localhost/api/docs](http://localhost/api/docs)
-- **API Health Check:** [http://localhost/api/v1/health/live](http://localhost/api/v1/health/live)
-
-> **Note**: On the first execution, the API container will download the HuggingFace embedding models. This takes a few minutes but will be securely cached in a persistent volume for all future restarts.
-
----
-
-## Architecture Details
-For a deep dive into the underlying systems, see:
-- [System Components](docs/architecture/components.md)
-- [Deployment Topology](docs/architecture/deployment.md)
+## 📖 Documentation
+- [Architecture Details](docs/architecture/components.md)
+- [Deployment Guide (VPS/Production)](docs/deployment.md)
+- [Architecture Decision Records (ADRs)](docs/adr/)

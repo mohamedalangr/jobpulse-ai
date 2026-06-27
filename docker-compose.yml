@@ -68,6 +68,28 @@ services:
       - jobpulse
     logging: *default-logging
 
+  scheduler:
+    build:
+      context: .
+      dockerfile: ops/docker/api.Dockerfile
+    command: python ops/scripts/scheduler.py
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://jobpulse:jobpulse_password@postgres:5432/jobpulse}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - hf_cache:/home/appuser/.cache/huggingface
+      - artifacts:/app/artifacts
+      - embeddings:/app/data/embeddings
+      - datasets:/app/data/raw
+      - exports:/app/data/exports
+      - logs:/app/logs
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - jobpulse
+    logging: *default-logging
+
   dashboard:
     build:
       context: .
