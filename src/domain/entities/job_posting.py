@@ -22,10 +22,12 @@ class JobPosting:
     id: Optional[str] = None
     location: Optional[str] = None
     country: Optional[str] = None
-    employment_type: Optional[str] = None
-    experience_level: Optional[str] = None
-    salary_min: Optional[float] = None
-    salary_max: Optional[float] = None
+    employment_type: str | None = None
+    experience_level: str | None = None
+    location: str | None = None
+    salary_min: float | None = None
+    salary_max: float | None = None
+    fingerprint: str | None = None
     currency: Optional[str] = None
     posted_at: Optional[datetime] = None
     skills: List[str] = field(default_factory=list)

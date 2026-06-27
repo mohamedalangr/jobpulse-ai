@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     app_version: str = "0.1.0"
     environment: str = Field(default="development", alias="APP_ENV")
     database_url: str
+    user_agent: str = "JobPulseAI/0.1"
     log_level: str = "INFO"
     debug: bool = True
 

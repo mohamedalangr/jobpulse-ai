@@ -55,9 +55,15 @@ class BaseScraper(ABC):
         
         raw_data = None
         last_error = None
+        # We rely on the client for HTTP retries, but we keep this outer loop
+        # in case the entire fetch() method needs to be retried (e.g. proxy rotation)
         for attempt in range(self.max_retries):
             try:
                 raw_data = self.fetch()
+                
+                # Save to Response Cache
+                from src.ingestion.cache import ResponseCache
+                ResponseCache().save(self.source_name, raw_data)
                 break
             except Exception as e:
                 last_error = e

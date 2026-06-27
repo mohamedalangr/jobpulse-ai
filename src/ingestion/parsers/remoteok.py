@@ -48,7 +48,7 @@ class RemoteOKParser(BaseParser):
                     salary_max=float(item["salary_max"]) if item.get("salary_max") else None,
                 )
                 jobs.append(job)
-            except Exception as e:
+            except (KeyError, TypeError, ValueError) as e:
                 logger.debug(f"[REMOTEOK] Validation error on record: {e}")
                 invalid_count += 1
 

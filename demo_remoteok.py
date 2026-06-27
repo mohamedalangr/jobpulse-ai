@@ -28,6 +28,32 @@ def main():
         print(f"Execution Time: {metric.duration_seconds:.2f} s\n")
     else:
         print("\nIngestion failed.\n")
+        return
+
+    print("=" * 41)
+    print("Processing Pipeline")
+    print("=" * 41)
+    
+    from src.processing.pipeline import ProcessingPipeline
+    from src.processing.stages.validation import ValidationStage
+    from src.processing.stages.cleaning import CleaningStage
+    from src.processing.stages.normalization import NormalizationStage
+    from src.processing.stages.fingerprint import FingerprintStage
+    from src.processing.stages.deduplication import DeduplicationStage
+    from src.processing.deduplication.memory_store import MemoryDuplicateStore
+    from src.processing.deduplication.detector import DuplicateDetector
+    
+    detector = DuplicateDetector(MemoryDuplicateStore())
+    pipeline = ProcessingPipeline([
+        ValidationStage(),
+        CleaningStage(),
+        NormalizationStage(),
+        FingerprintStage(),
+        DeduplicationStage(detector)
+    ])
+    
+    processed_jobs = pipeline.process(jobs)
+    print(f"\nFinal Processed Jobs: {len(processed_jobs)}\n")
 
 if __name__ == "__main__":
     main()
