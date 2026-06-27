@@ -2,12 +2,16 @@
 Custom exceptions for JobPulse AI.
 """
 
-class ConfigurationError(Exception):
-    """Raised when there is a configuration error."""
+class JobPulseError(Exception):
+    """Base exception for all JobPulse AI errors."""
     pass
 
-class DatabaseConnectionError(Exception):
-    """Raised when the database connection fails."""
+class DatabaseConnectionError(JobPulseError):
+    """Exception raised when the database is unreachable."""
+    pass
+
+class ConfigurationError(Exception):
+    """Raised when there is a configuration error."""
     pass
 
 class ScrapingError(Exception):
