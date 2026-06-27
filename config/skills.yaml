@@ -1,0 +1,49 @@
+Python:
+  category: Programming Language
+  aliases:
+    - python
+    - python3
+    - py
+  related:
+    - Django
+    - Flask
+    - FastAPI
+
+SQL:
+  category: Database
+  aliases:
+    - sql
+    - postgresql
+    - mysql
+    - sqlite
+  related:
+    - SQLAlchemy
+    - Snowflake
+
+Docker:
+  category: DevOps
+  aliases:
+    - docker
+    - docker-compose
+  related:
+    - Kubernetes
+    - AWS
+
+AWS:
+  category: Cloud
+  aliases:
+    - aws
+    - amazon web services
+  related:
+    - EC2
+    - S3
+    - Docker
+
+Machine Learning:
+  category: Data Science
+  aliases:
+    - machine learning
+    - ml
+  related:
+    - PyTorch
+    - TensorFlow
