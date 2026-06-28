@@ -27,9 +27,12 @@ def create_app() -> FastAPI:
     # Register Exception Handlers
     register_exception_handlers(app)
     
+    from src.api.v1.routers import health, search, mock_intelligence
+    
     # Register Routers
     app.include_router(health.router, prefix="/api/v1")
     app.include_router(search.router, prefix="/api/v1")
+    app.include_router(mock_intelligence.router, prefix="/api/v1")
     
     
     return app
