@@ -22,10 +22,10 @@ class JobPulseApiClient:
 
     # Developer Observability
     def get_health(self) -> dict:
-        return self.transport.get("/health")
+        return self.transport.get("/health/live")
 
     def get_version(self) -> dict:
         return self.transport.get("/version")
 
     def get_ready(self) -> dict:
-        return self.transport.get("/ready")
+        return self.transport.get("/health/ready")
