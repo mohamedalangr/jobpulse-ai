@@ -1,11 +1,12 @@
 from typing import Dict, Type, Any
 from src.intelligence.embeddings.base import EmbeddingProvider
-from src.intelligence.embeddings.providers.sentence_transformer import SentenceTransformerProvider
+from src.intelligence.embeddings.providers.hosted import OpenAIProvider, HuggingFaceProvider
 
 class EmbeddingRegistry:
     def __init__(self):
         self._providers: Dict[str, Type[EmbeddingProvider]] = {
-            "sentence_transformer": SentenceTransformerProvider
+            "hosted_openai": OpenAIProvider,
+            "hosted_huggingface": HuggingFaceProvider
         }
         
     def register(self, name: str, provider_cls: Type[EmbeddingProvider]) -> None:

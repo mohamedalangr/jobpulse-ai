@@ -16,3 +16,14 @@ class APIResponse(BaseModel, Generic[T]):
     version: str = "0.5.0"
     data: Optional[T] = None
     error: Optional[ErrorDetail] = None
+
+class JobSearchResultDTO(BaseModel):
+    id: str
+    title: str
+    company: str
+    location: Optional[str] = None
+    url: str
+    salary_min: Optional[float] = None
+    salary_max: Optional[float] = None
+    currency: Optional[str] = None
+    similarity_score: float

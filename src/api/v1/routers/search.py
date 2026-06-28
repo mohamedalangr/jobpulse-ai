@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request, Depends
-from src.api.schemas.responses import APIResponse
+from src.api.schemas.responses import APIResponse, JobSearchResultDTO
 from src.api.schemas.requests import SearchRequest
 from src.api.exceptions import SearchError
 from src.application.queries.search_jobs import SearchJobsQuery, SearchJobsUseCase
@@ -24,11 +24,28 @@ async def search_jobs(
         # Execute Use Case
         results = use_case.execute(query, context=getattr(request, "state", None))
         
+        # Map results to DTOs
+        mapped_data = []
+        for job, score in results:
+            mapped_data.append(
+                JobSearchResultDTO(
+                    id=job.id,
+                    title=job.title,
+                    company=job.company,
+                    location=job.location,
+                    url=job.url,
+                    salary_min=job.salary_min,
+                    salary_max=job.salary_max,
+                    currency=job.currency,
+                    similarity_score=score
+                )
+            )
+            
         return APIResponse(
             success=True,
             request_id=getattr(request.state, "request_id", "unknown"),
             timestamp=time.time(),
-            data=[] # Mocking results for API test boundary
+            data=mapped_data
         )
     except Exception as e:
         raise SearchError(f"Failed to execute semantic search: {str(e)}")

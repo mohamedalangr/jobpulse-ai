@@ -7,6 +7,7 @@ from typing import Optional
 from sqlalchemy import String, Text, DateTime, Integer, Numeric
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import JSONB
+from pgvector.sqlalchemy import Vector
 
 from src.database.base import Base
 
@@ -45,6 +46,9 @@ class Job(Base):
     # Platform-Owned Fields (Layer 3)
     skills: Mapped[Optional[list]] = mapped_column(JSONB, nullable=True)
     raw_data: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+    
+    # Vector Embeddings
+    embedding: Mapped[Optional[list[float]]] = mapped_column(Vector(384), nullable=True)
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(

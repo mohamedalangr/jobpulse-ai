@@ -26,7 +26,7 @@ async def readiness(request: Request):
             "status": "ready",
             "services": {
                 "database": "ready",
-                "faiss": "ready",
+                "pgvector": "ready",
                 "embedding_model": "lazy"
             }
         }

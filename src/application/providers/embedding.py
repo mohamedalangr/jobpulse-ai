@@ -16,7 +16,8 @@ class EmbeddingProvider(Provider):
     def _ensure_loaded(self):
         if self._provider is None:
             registry = InternalEmbeddingRegistry()
-            self._provider = registry.get_provider(self.descriptor.provider, model_name=self.descriptor.id)
+            provider_type = self.descriptor.provider if self.descriptor.provider != "sentence_transformer" else "hosted_openai"
+            self._provider = registry.get_provider(provider_type, model_name=self.descriptor.id)
             get_runtime_registry().register(f"embedding_{self.model_key}", self._provider)
 
     def embed(self, text: str) -> Any:

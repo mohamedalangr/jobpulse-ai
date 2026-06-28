@@ -11,7 +11,7 @@ class ApiSettings(BaseModel):
 
 class PreloadSettings(BaseModel):
     embeddings: bool = False
-    faiss: bool = True
+    pgvector: bool = True
 
 class ApplicationSettings(BaseModel):
     version: str
