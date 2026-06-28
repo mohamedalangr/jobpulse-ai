@@ -6,7 +6,7 @@ class JobPulseApiClient:
 
     # Core Intelligence
     def search_jobs(self, query: str) -> dict:
-        return self.transport.post("/search/semantic", json_data={"query": query})
+        return self.transport.post("/search", json_data={"query": query})
         
     def analyze_candidate(self, profile: dict) -> dict:
         return self.transport.post("/career/analyze", json_data=profile)
