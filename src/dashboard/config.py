@@ -25,7 +25,13 @@ def load_settings() -> DashboardSettings:
             if yaml_data:
                 settings_dict.update(yaml_data)
                 
-    # pydantic_settings will automatically override kwargs with Environment Variables
+    # pydantic_settings v2 gives kwargs precedence over env vars.
+    # We must manually override the yaml values if env vars are present.
+    if os.environ.get("API_URL"):
+        settings_dict["api_url"] = os.environ.get("API_URL")
+    if os.environ.get("API_KEY"):
+        settings_dict["api_key"] = os.environ.get("API_KEY")
+        
     return DashboardSettings(**settings_dict)
 
 settings = load_settings()
