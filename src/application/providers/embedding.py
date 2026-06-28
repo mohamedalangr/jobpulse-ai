@@ -21,7 +21,15 @@ class EmbeddingProvider(Provider):
             if "sentence" in provider_type or provider_type not in ["hosted_openai", "hosted_huggingface", "hosted_gemini"]:
                 provider_type = os.environ.get("EMBEDDING_PROVIDER", "hosted_gemini")
                 
-            self._provider = registry.get_provider(provider_type, model_name=self.descriptor.id)
+            # If we fallback to a cloud provider, use their default model instead of the local one
+            if provider_type == "hosted_gemini":
+                model_name = "text-embedding-004"
+            elif provider_type == "hosted_openai":
+                model_name = "text-embedding-3-small"
+            else:
+                model_name = self.descriptor.id
+                
+            self._provider = registry.get_provider(provider_type, model_name=model_name)
             get_runtime_registry().register(f"embedding_{self.model_key}", self._provider)
 
     def embed(self, text: str) -> Any:
