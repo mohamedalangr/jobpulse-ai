@@ -20,20 +20,9 @@ try:
     col3.metric("Timestamp", health_data.get("timestamp", "Unknown")[:10] if isinstance(health_data.get("timestamp"), str) else "Active")
     col4.metric("Version", "v0.5.0")
     
-    st.divider()
-    
-    st.subheader("Pipeline Operations")
-    st.markdown("Manually trigger the data ingestion and intelligence pipeline.")
-    
-    if st.button("🚀 Run Pipeline", use_container_width=True):
-        try:
-            with st.spinner("Pipeline is running... This may take a minute."):
-                res = client.run_pipeline()
-                st.success("✅ Pipeline executed successfully!")
-                with st.expander("Pipeline Output"):
-                    st.json(res)
-        except Exception as e:
-            handle_api_error(e)
+    # Pipeline execution is disabled in the Vercel serverless Cloud Edition
+    # due to execution time limits on web scraping and background workers.
+    # It remains fully functional in the local Enterprise Edition.
 
 except Exception as e:
     handle_api_error(e)
