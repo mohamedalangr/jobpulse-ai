@@ -9,6 +9,7 @@ pydantic
 pydantic-settings
 openai
 httpx
+google-genai
 pyarrow==16.1.0
 schedule==1.2.2
 streamlit

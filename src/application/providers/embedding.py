@@ -18,8 +18,8 @@ class EmbeddingProvider(Provider):
         if self._provider is None:
             registry = InternalEmbeddingRegistry()
             provider_type = self.descriptor.provider
-            if "sentence" in provider_type or provider_type not in ["hosted_openai", "hosted_huggingface"]:
-                provider_type = os.environ.get("EMBEDDING_PROVIDER", "hosted_openai")
+            if "sentence" in provider_type or provider_type not in ["hosted_openai", "hosted_huggingface", "hosted_gemini"]:
+                provider_type = os.environ.get("EMBEDDING_PROVIDER", "hosted_gemini")
                 
             self._provider = registry.get_provider(provider_type, model_name=self.descriptor.id)
             get_runtime_registry().register(f"embedding_{self.model_key}", self._provider)

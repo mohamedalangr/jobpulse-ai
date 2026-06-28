@@ -1,12 +1,13 @@
 from typing import Dict, Type, Any
 from src.intelligence.embeddings.base import EmbeddingProvider
-from src.intelligence.embeddings.providers.hosted import OpenAIProvider, HuggingFaceProvider
+from src.intelligence.embeddings.providers.hosted import OpenAIProvider, HuggingFaceProvider, GeminiProvider
 
 class EmbeddingRegistry:
     def __init__(self):
         self._providers: Dict[str, Type[EmbeddingProvider]] = {
             "hosted_openai": OpenAIProvider,
-            "hosted_huggingface": HuggingFaceProvider
+            "hosted_huggingface": HuggingFaceProvider,
+            "hosted_gemini": GeminiProvider
         }
         
     def register(self, name: str, provider_cls: Type[EmbeddingProvider]) -> None:
