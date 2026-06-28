@@ -14,17 +14,16 @@ if st.button("Search Jobs", type="primary", use_container_width=True):
         with st.spinner("Searching semantic vectors..."):
             response = client.search_jobs(query)
             
-        data = response.get("data", {})
-        results = data.get("results", [])
+        data = response.get("data", [])
         
-        if not results:
+        if not data:
             st.warning("No matching opportunities found.")
         else:
-            st.success(f"Found {len(results)} relevant positions.")
-            for match in results:
-                # Based on the API schema, match contains 'job' and 'score'
-                job = match.get("job", match)
-                score = match.get("score")
+            st.success(f"Found {len(data)} relevant positions.")
+            for match in data:
+                # Based on the API schema, the object is flattened JobSearchResultDTO
+                job = match
+                score = match.get("similarity_score")
                 render_job_card(job, score)
                 
     except Exception as e:
