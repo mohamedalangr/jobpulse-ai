@@ -3,6 +3,7 @@ from src.application.providers.base import Provider
 from src.application.providers.runtime import get_runtime_registry
 from src.application.models.registry import ModelRegistry
 from src.intelligence.embeddings.registry import EmbeddingRegistry as InternalEmbeddingRegistry
+import os
 
 class EmbeddingProvider(Provider):
     """Lazy-loads the embedding model on first use."""
@@ -16,7 +17,10 @@ class EmbeddingProvider(Provider):
     def _ensure_loaded(self):
         if self._provider is None:
             registry = InternalEmbeddingRegistry()
-            provider_type = self.descriptor.provider if self.descriptor.provider != "sentence_transformer" else "hosted_openai"
+            provider_type = self.descriptor.provider
+            if "sentence" in provider_type or provider_type not in ["hosted_openai", "hosted_huggingface"]:
+                provider_type = os.environ.get("EMBEDDING_PROVIDER", "hosted_openai")
+                
             self._provider = registry.get_provider(provider_type, model_name=self.descriptor.id)
             get_runtime_registry().register(f"embedding_{self.model_key}", self._provider)
 
