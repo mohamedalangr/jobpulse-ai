@@ -56,7 +56,7 @@ class HuggingFaceProvider(HostedEmbeddingProvider):
         return np.array(result, dtype=np.float32)
 
 class GeminiProvider(HostedEmbeddingProvider):
-    def __init__(self, model_name: str = "text-embedding-004"):
+    def __init__(self, model_name: str = "gemini-embedding-2"):
         self.model_name = model_name
         self.client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 

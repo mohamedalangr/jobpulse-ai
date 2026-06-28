@@ -23,7 +23,7 @@ class EmbeddingProvider(Provider):
                 
             # If we fallback to a cloud provider, use their default model instead of the local one
             if provider_type == "hosted_gemini":
-                model_name = "text-embedding-004"
+                model_name = "gemini-embedding-2"
             elif provider_type == "hosted_openai":
                 model_name = "text-embedding-3-small"
             else:
