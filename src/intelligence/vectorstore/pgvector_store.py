@@ -28,6 +28,10 @@ class PgVectorStore(VectorStore):
             # Note: We return ids as strings wrapped in a list to match the FAISS return signature
             # which returns batched results: List[List[str]]
             
+            # Ensure query_vector is 1D for pgvector
+            if len(query_vector.shape) > 1:
+                query_vector = query_vector.flatten()
+                
             stmt = select(Job.fingerprint, Job.embedding.l2_distance(query_vector.tolist()).label("distance")) \
                 .where(Job.embedding.is_not(None)) \
                 .order_by("distance") \
